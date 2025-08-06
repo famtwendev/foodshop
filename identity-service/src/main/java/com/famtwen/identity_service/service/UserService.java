@@ -217,20 +217,17 @@ public class UserService {
                                                                     .build()))
                                      .build());
 
-            String kid = extractUserId(creationResponse);
             // Get userId of KeyCloak account
-
+            String kid = extractUserId(creationResponse);
             User user = userMapper.toUser(request);
             user.setKid(kid);
 
             if (user.getUserRoles() == null) {
                 user.setUserRoles(new HashSet<>());
             }
-
             // Tìm role
             Role role = roleRepository.findById(roleDefault)
                                       .orElseThrow(() -> new RuntimeException("Role DEFAULT_ROLE not found"));
-
             // GÁN rOLE: Tạo UserRole trực tiếp
 //            // Tạo UserRole object
 //            UserRole userRole = UserRole.builder()
@@ -242,16 +239,23 @@ public class UserService {
 
             user.addRole(role); // Sử dụng helper method
 
-            user.setSex(Objects.requireNonNullElse(request.getSex(), ""));
-            user.setPicture(Objects.requireNonNullElse(request.getPicture(), ""));
+            user.setLastName(Objects.requireNonNullElse(request.getLastName(), ""));
+            user.setFirstName(Objects.requireNonNullElse(request.getFirstName(), ""));
+            user.setEmail(Objects.requireNonNullElse(request.getEmail(), ""));
             user.setAddress(Objects.requireNonNullElse(request.getAddress(), ""));
             user.setNumberPhone(Objects.requireNonNullElse(request.getNumberPhone(), ""));
+            user.setSex(Objects.requireNonNullElse(request.getSex(), ""));
+            user.setPicture(Objects.requireNonNullElse(request.getPicture(), ""));
 
             if (request.getDob() != null) {
                 user.setDob(request.getDob());
             }
             String fullName = user.getLastName() + " " + user.getFirstName(); // ví dụ: "Nguyễn Văn"
             user = userRepository.save(user);
+            if (user.getEmail()
+                    .isEmpty() || user.getEmail() == null) {
+                return userMapper.toUserResponse(user);
+            }
             NotificationEvent notificationEvent = NotificationEvent.builder()
                                                                    .channel("EMAIL")
                                                                    .recipient(user.getEmail())
