@@ -1,0 +1,92 @@
+# docker-compose.yaml
+version: "3.8"
+name: FTCSHOP
+
+services:
+  postgres:
+    image: bitnami/postgresql:17.5.0
+    container_name: postgres
+    environment:
+      - POSTGRESQL_USERNAME=postgres
+      - POSTGRESQL_PASSWORD=postgres
+      - POSTGRESQL_DATABASE=keycloak
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/bitnami/postgresql
+    networks:
+      - database
+
+  keycloak:
+    image: bitnami/keycloak:26.3.2
+    container_name: keycloak
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KEYCLOAK_DATABASE_HOST=postgres
+      - KEYCLOAK_DATABASE_PORT=5432
+      - KEYCLOAK_DATABASE_NAME=keycloak
+      - KEYCLOAK_DATABASE_USER=postgres
+      - KEYCLOAK_DATABASE_PASSWORD=postgres
+      - KEYCLOAK_ENABLE_HEALTH_ENDPOINTS=true
+    ports:
+      - "8180:8080"
+    depends_on:
+      - postgres
+    networks:
+      - database
+
+  kafka:
+    image: bitnami/kafka:4.0.0
+    container_name: kafka
+    hostname: kafka
+    ports:
+      - "9094:9094"
+    environment:
+      - KAFKA_CFG_NODE_ID=0
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://localhost:9094
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+    networks:
+      - database
+
+  mongodb:
+    image: bitnami/mongodb:7.0.11
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGODB_ROOT_USER=root
+      - MONGODB_ROOT_PASSWORD=root
+    networks:
+      - database
+
+  mysql:
+    image: bitnami/mysql:9.4.0
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    networks:
+      - database
+
+  redis:
+    image: bitnami/redis:8.0
+    container_name: redis
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_PASSWORD=redis
+    networks:
+      - database
+
+volumes:
+  postgres_data:
+
+networks:
+  database:
+    driver: bridge

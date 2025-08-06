@@ -1,0 +1,133 @@
+graph TB
+    %% Frontend
+    subgraph "Frontend Applications"
+        WEB[Customer Web App<br/>React + Tailwind]
+        ADMIN[Admin Dashboard]
+        VENDOR[Vendor Dashboard]
+        MOBILE[Mobile App]
+    end
+
+    %% Identity & Authentication Layer
+    subgraph "Identity & Authentication Layer"
+        KEYCLOAK[Keycloak Identity Provider<br/>🔐 Authentication Server<br/>- OAuth2/OpenID Connect<br/>- Single Sign-On<br/>- Social Login Integration<br/>- Multi-factor Authentication<br/>- Token Management<br/>- Session Management]
+        
+        IDENTITY_SERVICE[Identity Service<br/>🆔 Identity Management<br/>Spring Boot 3 + PostgreSQL<br/>- User Authentication Logic<br/>- Password Management<br/>- Account Verification<br/>- Security Policies<br/>- Login/Logout History<br/>- Account Lockout Rules]
+    end
+
+    %% User Domain Services
+    subgraph "User Domain Services"
+        USER_PROFILE_SERVICE[User Profile Service<br/>👤 Profile Management<br/>Spring Boot 3 + MySQL<br/>- Personal Information<br/>- Profile Pictures<br/>- Bio & Description<br/>- Account Settings<br/>- Privacy Settings<br/>- Profile Visibility]
+        
+        CUSTOMER_SERVICE[Customer Service<br/>🛒 Customer Business Logic<br/>Spring Boot 3 + PostgreSQL<br/>- Customer Lifecycle<br/>- Customer Segmentation<br/>- Purchase History<br/>- Customer Preferences<br/>- Customer Status<br/>- Customer Analytics<br/>- Loyalty Points<br/>- Customer Support Tickets]
+        
+        VENDOR_SERVICE[Vendor Service<br/>🏪 Vendor Management<br/>Spring Boot 3 + PostgreSQL<br/>- Vendor Registration<br/>- Store Information<br/>- Business Verification<br/>- Vendor Performance<br/>- Commission Management<br/>- Vendor Analytics]
+        
+        ADMIN_SERVICE[Admin Service<br/>⚙️ Admin Operations<br/>Spring Boot 3 + PostgreSQL<br/>- Admin User Management<br/>- Role & Permission<br/>- System Configuration<br/>- Admin Dashboard Data<br/>- Audit Logs]
+    end
+
+    %% Supporting Services
+    subgraph "Supporting Services"
+        ROLE_SERVICE[Role & Permission Service<br/>🔑 Authorization<br/>Spring Boot 3 + PostgreSQL<br/>- Role Definitions<br/>- Permission Matrix<br/>- Access Control Lists<br/>- Dynamic Permissions<br/>- Role Hierarchy]
+        
+        NOTIFICATION_SERVICE[Notification Service<br/>📧 Communication<br/>Spring Boot 3 + MongoDB<br/>- Welcome Emails<br/>- Account Notifications<br/>- Security Alerts<br/>- Marketing Messages]
+    end
+
+    %% Data Layer
+    subgraph "Data Storage"
+        KEYCLOAK_DB[(Keycloak Database<br/>PostgreSQL<br/>🔐 Identity Data<br/>- User Credentials<br/>- OAuth Tokens<br/>- Client Configurations<br/>- Realm Settings)]
+        
+        IDENTITY_DB[(Identity Database<br/>PostgreSQL<br/>🆔 Auth Logic Data<br/>- Login Attempts<br/>- Security Logs<br/>- Password History<br/>- Account Status)]
+        
+        PROFILE_DB[(Profile Database<br/>MySQL<br/>👤 Profile Data<br/>- Personal Info<br/>- Profile Settings<br/>- Avatar Images<br/>- User Preferences)]
+        
+        CUSTOMER_DB[(Customer Database<br/>PostgreSQL<br/>🛒 Customer Data<br/>- Customer Journey<br/>- Purchase Behavior<br/>- Segmentation Data<br/>- Loyalty Information)]
+        
+        VENDOR_DB[(Vendor Database<br/>PostgreSQL<br/>🏪 Vendor Data<br/>- Store Information<br/>- Business Details<br/>- Performance Metrics<br/>- Commission Records)]
+        
+        ADMIN_DB[(Admin Database<br/>PostgreSQL<br/>⚙️ Admin Data<br/>- Admin Users<br/>- System Settings<br/>- Audit Trails<br/>- Operations Logs)]
+        
+        ROLE_DB[(Role Database<br/>PostgreSQL<br/>🔑 Permission Data<br/>- Roles & Permissions<br/>- Access Policies<br/>- Security Rules)]
+    end
+
+    %% Cache Layer
+    subgraph "Caching Layer"
+        REDIS_CACHE[Redis Cache<br/>⚡ Fast Access<br/>- User Sessions<br/>- Profile Cache<br/>- Permission Cache<br/>- Token Cache]
+    end
+
+    %% Message Broker
+    subgraph "Event Streaming"
+        KAFKA[Apache Kafka<br/>📨 Event Bus<br/>Topics:<br/>- user-registered<br/>- profile-updated<br/>- customer-created<br/>- vendor-approved<br/>- role-assigned]
+    end
+
+    %% External Services
+    subgraph "External Integrations"
+        SOCIAL_PROVIDERS[Social Login Providers<br/>🌐 OAuth Providers<br/>- Google<br/>- Facebook<br/>- Apple<br/>- Microsoft]
+        
+        EMAIL_PROVIDER[Email Service<br/>📧 External Email<br/>- SendGrid<br/>- AWS SES<br/>- Mailgun]
+        
+        SMS_PROVIDER[SMS Service<br/>📱 SMS Gateway<br/>- Twilio<br/>- AWS SNS<br/>- Local SMS Provider]
+    end
+
+    %% Flow Connections
+    WEB --> KEYCLOAK
+    ADMIN --> KEYCLOAK
+    VENDOR --> KEYCLOAK
+    MOBILE --> KEYCLOAK
+    
+    KEYCLOAK --> IDENTITY_SERVICE
+    KEYCLOAK --> SOCIAL_PROVIDERS
+    
+    IDENTITY_SERVICE --> USER_PROFILE_SERVICE
+    IDENTITY_SERVICE --> CUSTOMER_SERVICE
+    IDENTITY_SERVICE --> VENDOR_SERVICE
+    IDENTITY_SERVICE --> ADMIN_SERVICE
+    
+    %% Database Connections
+    KEYCLOAK --> KEYCLOAK_DB
+    IDENTITY_SERVICE --> IDENTITY_DB
+    USER_PROFILE_SERVICE --> PROFILE_DB
+    CUSTOMER_SERVICE --> CUSTOMER_DB
+    VENDOR_SERVICE --> VENDOR_DB
+    ADMIN_SERVICE --> ADMIN_DB
+    ROLE_SERVICE --> ROLE_DB
+    
+    %% Cache Connections
+    IDENTITY_SERVICE --> REDIS_CACHE
+    USER_PROFILE_SERVICE --> REDIS_CACHE
+    CUSTOMER_SERVICE --> REDIS_CACHE
+    ROLE_SERVICE --> REDIS_CACHE
+    
+    %% Event Connections
+    IDENTITY_SERVICE --> KAFKA
+    USER_PROFILE_SERVICE --> KAFKA
+    CUSTOMER_SERVICE --> KAFKA
+    VENDOR_SERVICE --> KAFKA
+    ADMIN_SERVICE --> KAFKA
+    ROLE_SERVICE --> KAFKA
+    
+    KAFKA --> NOTIFICATION_SERVICE
+    NOTIFICATION_SERVICE --> EMAIL_PROVIDER
+    NOTIFICATION_SERVICE --> SMS_PROVIDER
+    
+    %% Authorization Flow
+    USER_PROFILE_SERVICE --> ROLE_SERVICE
+    CUSTOMER_SERVICE --> ROLE_SERVICE
+    VENDOR_SERVICE --> ROLE_SERVICE
+    ADMIN_SERVICE --> ROLE_SERVICE
+
+    %% Styling
+    classDef frontend fill:#e1f5fe,stroke:#0277bd,stroke-width:2px
+    classDef identity fill:#fff8e1,stroke:#f57f17,stroke-width:2px
+    classDef userService fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef support fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    classDef database fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+    classDef infrastructure fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef external fill:#f1f8e9,stroke:#558b2f,stroke-width:2px
+
+    class WEB,ADMIN,VENDOR,MOBILE frontend
+    class KEYCLOAK,IDENTITY_SERVICE identity
+    class USER_PROFILE_SERVICE,CUSTOMER_SERVICE,VENDOR_SERVICE,ADMIN_SERVICE userService
+    class ROLE_SERVICE,NOTIFICATION_SERVICE support
+    class KEYCLOAK_DB,IDENTITY_DB,PROFILE_DB,CUSTOMER_DB,VENDOR_DB,ADMIN_DB,ROLE_DB database
+    class REDIS_CACHE,KAFKA infrastructure
+    class SOCIAL_PROVIDERS,EMAIL_PROVIDER,SMS_PROVIDER external

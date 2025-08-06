@@ -1,0 +1,46 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /identity
+app:
+  dbName: identity-service
+
+spring:
+  application:
+    name: ${app.dbName}
+
+  datasource:
+    url:  ${MYSQL_URL_CONNECTION}/${app.dbName}
+    driverClassName: "com.mysql.cj.jdbc.Driver"
+    username: ${MYSQL_ROOT_USERNAME:root}
+    password: ${MYSQL_ROOT_PASSWORD:root}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  kafka:
+    bootstrap-servers: ${KAFKA_HOST:localhost:9094}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${keycloak.url}/realms/${keycloak.realm}
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}       # hoặc 'redis' nếu dùng trong docker-compose chung
+      port: 6379
+      username: ${REDIS_USERNAME:default}
+      password: ${REDIS_PASSWORD:redis}
+
+keycloak:
+  url: ${KEYCLOAK_URL:http://localhost:8180}
+  realm: ${KEYCLOAK_REALM}
+  client-id: ${KEYCLOAK_CLIENT_ID}
+  client-secret: ${KEYCLOAK_CLIENT_SECRET}
+  default-roles: ${KEYCLOAK_DEFAULT_ROLE:default-roles}-${keycloak.realm}

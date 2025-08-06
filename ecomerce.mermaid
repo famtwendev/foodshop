@@ -1,0 +1,229 @@
+graph TB
+    %% Frontend Layer
+    subgraph "Frontend Layer"
+        WEB[React.js + Tailwind CSS<br/>Customer Web App]
+        MOBILE[React Native<br/>Mobile App]
+        ADMIN[Admin Dashboard<br/>React.js + Tailwind]
+        VENDOR[Vendor Dashboard<br/>React.js + Tailwind]
+    end
+
+    %% API Gateway Layer
+    subgraph "API Gateway Layer"
+        GATEWAY[API Gateway<br/>Spring Cloud Gateway<br/>Rate Limiting & Load Balancing]
+        BFF_CUSTOMER[BFF Customer<br/>Backend for Frontend]
+        BFF_ADMIN[BFF Admin<br/>Backend for Frontend]
+    end
+
+    %% Core Authentication
+    subgraph "Authentication & Authorization"
+        KEYCLOAK[Keycloak Server<br/>OAuth2/OpenID Connect]
+        USER_SERVICE[User Profile Service<br/>Spring Boot 3 + MySQL]
+        ROLE_SERVICE[Role & Permission Service<br/>Spring Boot 3 + PostgreSQL]
+    end
+
+    %% Core E-commerce Services
+    subgraph "Product Management"
+        PRODUCT_SERVICE[Product Service<br/>Spring Boot 3 + PostgreSQL]
+        CATEGORY_SERVICE[Category Service<br/>Spring Boot 3 + PostgreSQL]
+        BRAND_SERVICE[Brand Service<br/>Spring Boot 3 + PostgreSQL]
+        ATTRIBUTE_SERVICE[Product Attribute Service<br/>Spring Boot 3 + PostgreSQL]
+    end
+
+    subgraph "Order Management"
+        ORDER_SERVICE[Order Service<br/>Spring Boot 3 + PostgreSQL]
+        CART_SERVICE[Cart Service<br/>Spring Boot 3 + Redis]
+        CHECKOUT_SERVICE[Checkout Service<br/>Spring Boot 3 + PostgreSQL]
+        ORDER_TRACKING_SERVICE[Order Tracking Service<br/>Spring Boot 3 + PostgreSQL]
+    end
+
+    subgraph "Payment & Finance"
+        PAYMENT_SERVICE[Payment Service<br/>Spring Boot 3 + PostgreSQL]
+        WALLET_SERVICE[Wallet Service<br/>Spring Boot 3 + PostgreSQL]
+        REFUND_SERVICE[Refund Service<br/>Spring Boot 3 + PostgreSQL]
+        BILLING_SERVICE[Billing Service<br/>Spring Boot 3 + PostgreSQL]
+    end
+
+    subgraph "Inventory & Warehouse"
+        INVENTORY_SERVICE[Inventory Service<br/>Spring Boot 3 + PostgreSQL]
+        WAREHOUSE_SERVICE[Warehouse Service<br/>Spring Boot 3 + PostgreSQL]
+        STOCK_SERVICE[Stock Management Service<br/>Spring Boot 3 + PostgreSQL]
+        SUPPLIER_SERVICE[Supplier Service<br/>Spring Boot 3 + PostgreSQL]
+    end
+
+    subgraph "Customer Service"
+        REVIEW_SERVICE[Review & Rating Service<br/>Spring Boot 3 + MongoDB]
+        WISHLIST_SERVICE[Wishlist Service<br/>Spring Boot 3 + Redis/PostgreSQL]
+        RECOMMENDATION_SERVICE[Recommendation Service<br/>Spring Boot 3 + Neo4j/MongoDB]
+        LOYALTY_SERVICE[Loyalty Program Service<br/>Spring Boot 3 + PostgreSQL]
+    end
+
+    subgraph "Marketing & Promotion"
+        COUPON_SERVICE[Coupon Service<br/>Spring Boot 3 + PostgreSQL]
+        PROMOTION_SERVICE[Promotion Service<br/>Spring Boot 3 + PostgreSQL]
+        CAMPAIGN_SERVICE[Marketing Campaign Service<br/>Spring Boot 3 + PostgreSQL]
+        AFFILIATE_SERVICE[Affiliate Service<br/>Spring Boot 3 + PostgreSQL]
+    end
+
+    subgraph "Content & Media"
+        FILE_SERVICE[File Storage Service<br/>Spring Boot 3 + MinIO/S3]
+        IMAGE_SERVICE[Image Processing Service<br/>Spring Boot 3 + ImageMagick]
+        CMS_SERVICE[Content Management Service<br/>Spring Boot 3 + PostgreSQL]
+        SEO_SERVICE[SEO Service<br/>Spring Boot 3 + PostgreSQL]
+    end
+
+    subgraph "Communication"
+        NOTIFICATION[Notification Service<br/>Spring Boot 3 + MongoDB]
+        EMAIL_SERVICE[Email Service<br/>Spring Boot 3 + PostgreSQL]
+        SMS_SERVICE[SMS Service<br/>Spring Boot 3 + PostgreSQL]
+        CHAT_SERVICE[Live Chat Service<br/>Spring Boot 3 + WebSocket + MongoDB]
+    end
+
+    subgraph "Search & Analytics"
+        SEARCH_SERVICE[Search Service<br/>Spring Boot 3 + Elasticsearch]
+        ANALYTICS_SERVICE[Analytics Service<br/>Spring Boot 3 + ClickHouse]
+        REPORTING_SERVICE[Reporting Service<br/>Spring Boot 3 + PostgreSQL]
+        LOG_SERVICE[Log Management Service<br/>Spring Boot 3 + MongoDB]
+    end
+
+    subgraph "Shipping & Logistics"
+        SHIPPING_SERVICE[Shipping Service<br/>Spring Boot 3 + PostgreSQL]
+        DELIVERY_SERVICE[Delivery Tracking Service<br/>Spring Boot 3 + PostgreSQL]
+        ADDRESS_SERVICE[Address Service<br/>Spring Boot 3 + PostgreSQL]
+        GEOLOCATION_SERVICE[Geolocation Service<br/>Spring Boot 3 + PostGIS]
+    end
+
+    subgraph "Vendor Management"
+        VENDOR_SERVICE[Vendor Service<br/>Spring Boot 3 + PostgreSQL]
+        COMMISSION_SERVICE[Commission Service<br/>Spring Boot 3 + PostgreSQL]
+        VENDOR_ANALYTICS_SERVICE[Vendor Analytics Service<br/>Spring Boot 3 + ClickHouse]
+    end
+
+    subgraph "Configuration & Settings"
+        CONFIG_SERVICE[Configuration Service<br/>Spring Boot 3 + PostgreSQL]
+        SETTINGS_SERVICE[Settings Service<br/>Spring Boot 3 + PostgreSQL]
+        CURRENCY_SERVICE[Currency Service<br/>Spring Boot 3 + PostgreSQL]
+        TAX_SERVICE[Tax Calculation Service<br/>Spring Boot 3 + PostgreSQL]
+    end
+
+    %% Infrastructure Layer
+    subgraph "Message Brokers"
+        KAFKA[Apache Kafka<br/>Event Streaming Platform<br/>30+ Topics]
+        REDIS[Redis Cluster<br/>Caching & Session Store]
+    end
+
+    subgraph "Search & Data Processing"
+        ELK_STACK[ELK Stack]
+        ELASTICSEARCH[Elasticsearch<br/>Search Engine & Logs]
+        LOGSTASH[Logstash<br/>Data Processing Pipeline]
+        KIBANA[Kibana<br/>Data Visualization]
+    end
+
+    subgraph "Databases"
+        MYSQL[(MySQL<br/>User Profiles)]
+        POSTGRES[(PostgreSQL Cluster<br/>Main Business Data)]
+        MONGODB[(MongoDB Cluster<br/>Documents & Logs)]
+        CLICKHOUSE[(ClickHouse<br/>Analytics & BigData)]
+        NEO4J[(Neo4j<br/>Recommendations Graph)]
+        REDIS_DB[(Redis<br/>Cache & Sessions)]
+    end
+
+    subgraph "File Storage"
+        MINIO[MinIO Object Storage<br/>Files & Images]
+        CDN[CDN<br/>Content Delivery Network]
+    end
+
+    subgraph "Monitoring & DevOps"
+        PROMETHEUS[Prometheus<br/>Metrics Collection]
+        GRAFANA[Grafana<br/>Monitoring Dashboard]
+        JAEGER[Jaeger<br/>Distributed Tracing]
+        CONSUL[Consul<br/>Service Discovery]
+        VAULT[HashiCorp Vault<br/>Secret Management]
+    end
+
+    subgraph "External Integrations"
+        PAYMENT_GATEWAYS[Payment Gateways<br/>VNPay, Stripe, PayPal, MoMo]
+        SHIPPING_PROVIDERS[Shipping Providers<br/>GHN, GHTK, VNPost, DHL]
+        SOCIAL_LOGIN[Social Login<br/>Google, Facebook, Apple]
+        MAPS_API[Maps API<br/>Google Maps, OpenStreetMap]
+        ANALYTICS_TOOLS[Analytics Tools<br/>Google Analytics, Facebook Pixel]
+    end
+
+    %% Frontend Connections
+    WEB --> GATEWAY
+    MOBILE --> GATEWAY
+    ADMIN --> GATEWAY
+    VENDOR --> GATEWAY
+    
+    GATEWAY --> BFF_CUSTOMER
+    GATEWAY --> BFF_ADMIN
+    
+    %% Core Service Connections
+    BFF_CUSTOMER --> KEYCLOAK
+    BFF_ADMIN --> KEYCLOAK
+    
+    %% Service to Service Communications (simplified - most go through Kafka)
+    ORDER_SERVICE --> KAFKA
+    PAYMENT_SERVICE --> KAFKA
+    INVENTORY_SERVICE --> KAFKA
+    NOTIFICATION --> KAFKA
+    PRODUCT_SERVICE --> KAFKA
+    CART_SERVICE --> KAFKA
+    USER_SERVICE --> KAFKA
+    SHIPPING_SERVICE --> KAFKA
+    EMAIL_SERVICE --> KAFKA
+    SMS_SERVICE --> KAFKA
+    ANALYTICS_SERVICE --> KAFKA
+    
+    %% Database Connections
+    USER_SERVICE --> MYSQL
+    PRODUCT_SERVICE --> POSTGRES
+    ORDER_SERVICE --> POSTGRES
+    INVENTORY_SERVICE --> POSTGRES
+    PAYMENT_SERVICE --> POSTGRES
+    REVIEW_SERVICE --> MONGODB
+    NOTIFICATION --> MONGODB
+    ANALYTICS_SERVICE --> CLICKHOUSE
+    RECOMMENDATION_SERVICE --> NEO4J
+    
+    %% Cache Connections
+    CART_SERVICE --> REDIS_DB
+    USER_SERVICE --> REDIS_DB
+    PRODUCT_SERVICE --> REDIS_DB
+    
+    %% File Storage
+    FILE_SERVICE --> MINIO
+    IMAGE_SERVICE --> MINIO
+    MINIO --> CDN
+    
+    %% Search
+    SEARCH_SERVICE --> ELASTICSEARCH
+    PRODUCT_SERVICE --> ELASTICSEARCH
+    
+    %% External Services
+    PAYMENT_SERVICE --> PAYMENT_GATEWAYS
+    SHIPPING_SERVICE --> SHIPPING_PROVIDERS
+    KEYCLOAK --> SOCIAL_LOGIN
+    GEOLOCATION_SERVICE --> MAPS_API
+    ANALYTICS_SERVICE --> ANALYTICS_TOOLS
+    
+    %% Monitoring
+    PROMETHEUS --> GRAFANA
+    
+    %% Styling
+    classDef frontend fill:#e1f5fe
+    classDef gateway fill:#f3e5f5
+    classDef auth fill:#fff8e1
+    classDef core fill:#e8f5e8
+    classDef support fill:#fce4ec
+    classDef infrastructure fill:#f3e5f5
+    classDef database fill:#fff3e0
+    classDef external fill:#f1f8e9
+
+    class WEB,MOBILE,ADMIN,VENDOR frontend
+    class GATEWAY,BFF_CUSTOMER,BFF_ADMIN gateway
+    class KEYCLOAK,USER_SERVICE,ROLE_SERVICE auth
+    class PRODUCT_SERVICE,ORDER_SERVICE,PAYMENT_SERVICE,INVENTORY_SERVICE core
+    class NOTIFICATION,SEARCH_SERVICE,ANALYTICS_SERVICE,FILE_SERVICE support
+    class KAFKA,REDIS,ELASTICSEARCH,PROMETHEUS,GRAFANA infrastructure
+    class MYSQL,POSTGRES,MONGODB,CLICKHOUSE,NEO4J,REDIS_DB database
+    class PAYMENT_GATEWAYS,SHIPPING_PROVIDERS,SOCIAL_LOGIN external
